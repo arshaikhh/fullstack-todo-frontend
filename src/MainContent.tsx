@@ -13,6 +13,7 @@ export default function MainContent(): JSX.Element {
   const [id, setId] = useState(1);
   const [toDo, setToDo] = useState<ToDo[]>([]);
   const [checked, setChecked] = useState<ToDo[]>([]);
+  const [isDue, setIsDue] = useState(false);
 
   const currentDate = moment().format("YYYY-MM-DD");
 
@@ -28,8 +29,31 @@ export default function MainContent(): JSX.Element {
     }
   }
 
-  function filterOverDue() {
-    setToDo(toDo.filter((x) => dateComparison(currentDate, x.dueDate)));
+  function filterOverDue(x: ToDo) {
+    if (isDue) {
+      return dateComparison(currentDate, x.dueDate);
+    } else {
+      return x;
+    }
+  }
+
+  const showDue = () => setIsDue(true);
+  const showAll = () => setIsDue(false);
+
+  function setItemClassName(toDoItem: ToDo): string {
+    let str = "";
+    checked.includes(toDoItem)
+      ? (str = str + "checked")
+      : (str = str + "unchecked");
+    if (currentDate === toDoItem.dueDate) {
+      str = str + " Today";
+    } else if (
+      dateComparison(toDoItem.dueDate, currentDate) === false &&
+      toDoItem.dueDate !== ""
+    ) {
+      str = str + " due";
+    }
+    return str;
   }
 
   return (
@@ -63,32 +87,30 @@ export default function MainContent(): JSX.Element {
         add ToDo
       </button>
       <hr />
-      <button onClick={filterOverDue}>Show OverDue Items Only</button>
+      <button onClick={showDue}>Show OverDue Items Only</button>
+      <button onClick={showAll}>Show All Items</button>
       <ul>
-        {toDo.sort(sortByDate).map((toDoItem) => (
-          <li
-            key={toDoItem.id}
-            className={
-              (checked.includes(toDoItem) ? "checked" : "unchecked") +
-              (currentDate === toDoItem.dueDate && " Today") +
-              (dateComparison(toDoItem.dueDate, currentDate) === false &&
-                toDoItem.dueDate !== "" &&
-                " due")
-            }
-          >
-            <input type="checkbox" onChange={(e) => handleClick(e, toDoItem)} />{" "}
-            {toDoItem.toDo} &nbsp;&nbsp;|&nbsp;&nbsp; Due Date:{" "}
-            {(toDoItem.dueDate === "" && "No Due Date Added") ||
-              (currentDate === toDoItem.dueDate && "Today") ||
-              (dateComparison(toDoItem.dueDate, currentDate) &&
-                toDoItem.dueDate) ||
-              (dateComparison(toDoItem.dueDate, currentDate) === false &&
-                "Your To-Do item is overdue!")}
-            <button onClick={() => checkClick(toDoItem)} className="Remove">
-              Remove
-            </button>
-          </li>
-        ))}
+        {toDo
+          .sort(sortByDate)
+          .filter(filterOverDue)
+          .map((toDoItem) => (
+            <li key={toDoItem.id} className={setItemClassName(toDoItem)}>
+              <input
+                type="checkbox"
+                onChange={(e) => handleClick(e, toDoItem)}
+              />{" "}
+              {toDoItem.toDo} &nbsp;&nbsp;|&nbsp;&nbsp; Due Date:{" "}
+              {(toDoItem.dueDate === "" && "No Due Date Added") ||
+                (currentDate === toDoItem.dueDate && "Today") ||
+                (dateComparison(toDoItem.dueDate, currentDate) &&
+                  toDoItem.dueDate) ||
+                (dateComparison(toDoItem.dueDate, currentDate) === false &&
+                  "Your To-Do item is overdue!")}
+              <button onClick={() => checkClick(toDoItem)} className="Remove">
+                Remove
+              </button>
+            </li>
+          ))}
       </ul>
     </div>
   );
