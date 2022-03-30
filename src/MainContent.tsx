@@ -72,12 +72,14 @@ export default function MainContent(): JSX.Element {
               (checked.includes(toDoItem) ? "checked" : "unchecked") +
               (currentDate === toDoItem.dueDate && " Today") +
               (dateComparison(toDoItem.dueDate, currentDate) === false &&
+                toDoItem.dueDate !== "" &&
                 " due")
             }
           >
             <input type="checkbox" onChange={(e) => handleClick(e, toDoItem)} />{" "}
             {toDoItem.toDo} &nbsp;&nbsp;|&nbsp;&nbsp; Due Date:{" "}
-            {(currentDate === toDoItem.dueDate && "Today") ||
+            {(toDoItem.dueDate === "" && "No Due Date Added") ||
+              (currentDate === toDoItem.dueDate && "Today") ||
               (dateComparison(toDoItem.dueDate, currentDate) &&
                 toDoItem.dueDate) ||
               (dateComparison(toDoItem.dueDate, currentDate) === false &&
