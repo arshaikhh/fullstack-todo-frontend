@@ -7,3 +7,12 @@
     margin-left: 10px;
     
 }
+
+
+.due{
+    color:red;
+}
+
+.Today {
+    color: rgb(133, 124, 5);
+}
