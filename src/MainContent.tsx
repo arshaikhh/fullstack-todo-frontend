@@ -29,7 +29,7 @@ export default function MainContent(): JSX.Element {
   }
 
   function filterOverDue() {
-    setToDo(toDo.filter(x=>dateComparison(currentDate,x.dueDate)))
+    setToDo(toDo.filter((x) => dateComparison(currentDate, x.dueDate)));
   }
 
   return (
@@ -62,16 +62,18 @@ export default function MainContent(): JSX.Element {
       >
         add ToDo
       </button>
-      <hr/>
-      <button onClick={(filterOverDue)}>Show OverDue Items Only</button>
+      <hr />
+      <button onClick={filterOverDue}>Show OverDue Items Only</button>
       <ul>
         {toDo.sort(sortByDate).map((toDoItem) => (
           <li
             key={toDoItem.id}
             className={
               (checked.includes(toDoItem) ? "checked" : "unchecked") +
-              (currentDate === toDoItem.dueDate && " Today") + (dateComparison(toDoItem.dueDate, currentDate) === false &&" due")}
-              
+              (currentDate === toDoItem.dueDate && " Today") +
+              (dateComparison(toDoItem.dueDate, currentDate) === false &&
+                " due")
+            }
           >
             <input type="checkbox" onChange={(e) => handleClick(e, toDoItem)} />{" "}
             {toDoItem.toDo} &nbsp;&nbsp;|&nbsp;&nbsp; Due Date:{" "}
