@@ -12,7 +12,11 @@ interface ToDo {
   dueDate: string;
 }
 export default function MainContent(): JSX.Element {
-  const requestUrl = "http://localhost:4000/items";
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://todo-list-shaikhh.herokuapp.com/"
+      : "localhost:4000";
+  const requestUrl = `http://${baseUrl}/items`;
 
   // const [id, setId] = useState(1);
   const [toDo, setToDo] = useState<ToDo[]>([]);
@@ -72,7 +76,7 @@ export default function MainContent(): JSX.Element {
       setToDo(jsonBody);
     };
     fetchData();
-  }, []);
+  }, [requestUrl]);
 
   const postData = async (inputValue: string, due: string) => {
     await axios.post(requestUrl, {
