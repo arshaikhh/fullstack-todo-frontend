@@ -14,9 +14,9 @@ interface ToDo {
 export default function MainContent(): JSX.Element {
   const baseUrl =
     process.env.NODE_ENV === "production"
-      ? "https://todo-list-shaikhh.herokuapp.com/"
-      : "localhost:4000";
-  const requestUrl = `http://${baseUrl}/items`;
+      ? "https://todo-list-shaikhh.herokuapp.com"
+      : "http://localhost:4000";
+  const requestUrl = `${baseUrl}/items`;
 
   // const [id, setId] = useState(1);
   const [toDo, setToDo] = useState<ToDo[]>([]);
