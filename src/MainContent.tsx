@@ -18,19 +18,18 @@ export default function MainContent(): JSX.Element {
   const [toDo, setToDo] = useState<ToDo[]>([]);
   const [checked, setChecked] = useState<ToDo[]>([]);
   const [isDue, setIsDue] = useState(false);
-  const [itemToUpdate, setItemToUpdate]= useState<ToDo|null>()
+  const [itemToUpdate, setItemToUpdate] = useState<ToDo | null>();
 
   const currentDate = moment().format("YYYY-MM-DD");
 
   const removeClick = async (y: ToDo) => {
-    const removeUrl=requestUrl+"/"+y.id
+    const removeUrl = requestUrl + "/" + y.id;
     await axios.delete(removeUrl);
     const response = await fetch(requestUrl);
     const jsonBody = await response.json();
 
     setToDo(jsonBody);
-  
-}
+  };
 
   function handleClick(e: React.ChangeEvent<HTMLInputElement>, x: ToDo) {
     if (e.target.checked) {
@@ -87,12 +86,12 @@ export default function MainContent(): JSX.Element {
     setToDo(jsonBody);
   };
 
-  const updateData = async (inputValue: string,id:number) => {
-    const updatedUrl = requestUrl+"/"+id
+  const updateData = async (inputValue: string, id: number) => {
+    const updatedUrl = requestUrl + "/" + id;
     await axios.patch(updatedUrl, {
       /*id: id,*/ toDo: inputValue,
     });
-    
+
     const response = await fetch(requestUrl);
     const jsonBody = await response.json();
 
@@ -120,7 +119,7 @@ export default function MainContent(): JSX.Element {
           ).value;
           const due = (document.getElementById("dueDate") as HTMLInputElement)
             .value;
-          postData(inputValue,due)
+          postData(inputValue, due);
         }}
       >
         add ToDo
@@ -145,21 +144,33 @@ export default function MainContent(): JSX.Element {
                   toDoItem.dueDate) ||
                 (dateComparison(toDoItem.dueDate, currentDate) === false &&
                   "Your To-Do item is overdue!")}
-              <button onClick={()=>{
-                itemToUpdate===toDoItem?setItemToUpdate(null):setItemToUpdate(toDoItem);
-                const inputValue = (
-                  document.getElementById("updateText") as HTMLInputElement
-                ).value;
-                console.log(inputValue)
-                if(inputValue!==""){
-                updateData(inputValue,toDoItem.id);
-                (document.getElementById("updateText") as HTMLInputElement).value=""
-                }
-              }} className="Remove"> update
-               </button>
-               <input type={itemToUpdate===toDoItem?"text":"hidden"} id="updateText" placeholder="type in your update"/>
+              <button
+                onClick={() => {
+                  itemToUpdate === toDoItem
+                    ? setItemToUpdate(null)
+                    : setItemToUpdate(toDoItem);
+                  const inputValue = (
+                    document.getElementById("updateText") as HTMLInputElement
+                  ).value;
+                  console.log(inputValue);
+                  if (inputValue !== "") {
+                    updateData(inputValue, toDoItem.id);
+                    (
+                      document.getElementById("updateText") as HTMLInputElement
+                    ).value = "";
+                  }
+                }}
+                className="Remove"
+              >
+                {" "}
+                update
+              </button>
+              <input
+                type={itemToUpdate === toDoItem ? "text" : "hidden"}
+                id="updateText"
+                placeholder="type in your update"
+              />
               <button onClick={() => removeClick(toDoItem)} className="Remove">
-              
                 remove
               </button>
             </li>
