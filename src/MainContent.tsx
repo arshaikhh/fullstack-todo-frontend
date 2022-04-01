@@ -23,6 +23,7 @@ export default function MainContent(): JSX.Element {
   const [checked, setChecked] = useState<ToDo[]>([]);
   const [isDue, setIsDue] = useState(false);
   const [itemToUpdate, setItemToUpdate] = useState<ToDo | null>();
+  // const [inputUpdate,setinputUpdate]=useState<string>("")
 
   const currentDate = moment().format("YYYY-MM-DD");
 
@@ -153,14 +154,25 @@ export default function MainContent(): JSX.Element {
                   itemToUpdate === toDoItem
                     ? setItemToUpdate(null)
                     : setItemToUpdate(toDoItem);
-                  const inputValue = (
-                    document.getElementById("updateText") as HTMLInputElement
+                  const inputUpdate = (
+                    document.getElementById(
+                      "updateText" + toDoItem.id
+                    ) as HTMLInputElement
                   ).value;
-                  console.log(inputValue);
-                  if (inputValue !== "") {
-                    updateData(inputValue, toDoItem.id);
+
+                  console.log(
                     (
-                      document.getElementById("updateText") as HTMLInputElement
+                      document.getElementById(
+                        "updateText" + toDoItem.id
+                      ) as HTMLInputElement
+                    ).value
+                  );
+                  if (inputUpdate !== "") {
+                    updateData(inputUpdate, toDoItem.id);
+                    (
+                      document.getElementById(
+                        "updateText" + toDoItem.id
+                      ) as HTMLInputElement
                     ).value = "";
                   }
                 }}
@@ -171,7 +183,7 @@ export default function MainContent(): JSX.Element {
               </button>
               <input
                 type={itemToUpdate === toDoItem ? "text" : "hidden"}
-                id="updateText"
+                id={"updateText" + toDoItem.id}
                 placeholder="type in your update"
               />
               <button onClick={() => removeClick(toDoItem)} className="Remove">
